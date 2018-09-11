@@ -34,6 +34,25 @@ app.get(`${genresEndPoint}/:id`, (req, res) => {
     res.send(genr);
 });
 
+app.post(genresEndPoint, (req, res) => {
+    const {error}=validateGenr(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+
+    const genr={
+        id:genres.length+1,
+        name:req.body.name
+    }
+    genres.push(genr);
+    res.send(genr);
+});
+
+function validateGenr(genr) {
+    const schema = {
+        name: Joi.string().min(3).required()
+    }
+    return Joi.validate(genr, schema);
+
+}
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Lestining to port ${port}.....`));
