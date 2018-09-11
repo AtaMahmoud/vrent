@@ -7,19 +7,19 @@ app.use(express.json());
 const genresEndPoint = '/api/genres';
 const genres = [{
         id: 1,
-        genr: "Action"
+        name: "Action"
     },
     {
         id: 2,
-        genr: "comedy"
+        name: "comedy"
     },
     {
         id: 3,
-        genr: "fantasy"
+        name: "fantasy"
     },
     {
         id: 4,
-        genr: "sci-fection"
+        name: "sci-fection"
     },
 ];
 
@@ -45,6 +45,18 @@ app.post(genresEndPoint, (req, res) => {
     genres.push(genr);
     res.send(genr);
 });
+
+app.put(`${genresEndPoint}/:id`,(req,res)=>{
+    const genr = genres.find(g => g.id === parseInt(req.params.id));
+    if (!genr) return res.status(404).send(`the genr with id: ${req.body.id} can't be found`);
+
+    const {error}=validateGenr(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+
+    genr.name=req.body.name;
+    res.send(genr);
+});
+
 
 function validateGenr(genr) {
     const schema = {
