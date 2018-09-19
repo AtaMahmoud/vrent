@@ -1,69 +1,67 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
+const mongoose = require('mongoose');
 
-const genres = [{
-        id: 1,
-        name: "Action"
-    },
-    {
-        id: 2,
-        name: "comedy"
-    },
-    {
-        id: 3,
-        name: "fantasy"
-    },
-    {
-        id: 4,
-        name: "sci-fection"
-    },
-];
 
-router.get('/', (req, res) => {
+const Genres = mongoose.model('Genres', new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 50
+    }
+}));
+
+
+
+router.get('/', async (req, res) => {
+    const genres = await Genres.find().sort('name');
     res.send(genres);
 });
 
-router.get('/:id', (req, res) => {
-    const genre = genres.find(g => g.id === parseInt(req.params.id));
+router.get('/:id', async (req, res) => {
+    const genre = await Genres.findById(req.params.id);
     if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
 
     res.send(genre);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const {
         error
     } = validateGenre(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const genre = {
-        id: genres.length + 1,
+    let genre = new Genres({
         name: req.body.name
-    }
-    genres.push(genre);
+    });
+    genre = await genre.save();
     res.send(genre);
 });
 
-router.put('/:id', (req, res) => {
-    const genre = genres.find(g => g.id === parseInt(req.params.id));
-    if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
-
+router.put('/:id', async (req, res) => {
     const {
         error
     } = validateGenre(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    genre.name = req.body.name;
+    const genre = await Genres.findOneAndUpdate(req.params.id, {
+        $set: {
+            name: req.body.name
+        }
+    }, {
+        new: true
+    });
+
+    if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
+
     res.send(genre);
 });
 
-router.delete('/:id', (req, res) => {
-    const genre = genres.find(g => g.id === parseInt(req.params.id));
+router.delete('/:id', async (req, res) => {
+    const genre = await Genres.findOneAndRemove(req.params.id);
     if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
-
-    const index = genres.indexOf(genre);
-    genres.splice(index, 1);
 
     res.send(genre);
 });
@@ -76,4 +74,4 @@ function validateGenre(genre) {
 
 }
 
-module.exports=router;
+module.exports = router;
