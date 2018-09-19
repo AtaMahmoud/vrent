@@ -46,7 +46,7 @@ router.put('/:id', async (req, res) => {
     } = validateGenre(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const genre = await Genres.findOneAndUpdate(req.params.id, {
+    const genre = await Genres.findByIdAndUpdate(req.params.id, {
         $set: {
             name: req.body.name
         }
@@ -54,7 +54,7 @@ router.put('/:id', async (req, res) => {
         new: true
     });
 
-    if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
+    if (!genre) return res.status(404).send(`the genre with id: ${req.params.id} can't be found`);
 
     res.send(genre);
 });
