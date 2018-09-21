@@ -4,14 +4,16 @@ const genres = require('./routes/genres');
 const customers = require('./routes/customers');
 const movies = require('./routes/movies');
 const rentals=require('./routes/rentals');
+const users=require('./routes/users');
 const mongoose = require('mongoose');
 const Joi = require('joi');
-joi.objectId=require('joi-objectid')(Joi);
+Joi.objectId=require('joi-objectid')(Joi);
 
 const genresEndPoint = '/api/genres';
 const customerEndPoint = '/api/customers';
 const moviesEndPoint = '/api/movies';
 const rentalsEndPoint='/api/rentals';
+const userEndPoint='/api/users';
 
 app.use(express.json());
 
@@ -19,6 +21,7 @@ app.use(genresEndPoint, genres);
 app.use(customerEndPoint, customers);
 app.use(moviesEndPoint, movies);
 app.use(rentalsEndPoint,rentals);
+app.use(userEndPoint,users);
 
 mongoose.connect('mongodb://localhost/vrent', {
         useNewUrlParser: true
