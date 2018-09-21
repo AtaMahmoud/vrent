@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
 
     if (movie.numberInStocke === 0) return res.status(400).send('Movie not in Stock');
 
-    let rental = new Rental({
+    const rental = new Rental({
         customer: {
             _id: customer._id,
             name: customer.name,

@@ -5,6 +5,8 @@ const customers = require('./routes/customers');
 const movies = require('./routes/movies');
 const rentals=require('./routes/rentals');
 const mongoose = require('mongoose');
+const Joi = require('joi');
+joi.objectId=require('joi-objectid')(Joi);
 
 const genresEndPoint = '/api/genres';
 const customerEndPoint = '/api/customers';
