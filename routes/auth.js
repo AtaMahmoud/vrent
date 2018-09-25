@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
     const token=user.generateAuthToken();
     res.send(token);
 });
-//vrent_jwtPrivateKey
+
 function validate(req) {
     const schema = {
         email: Joi.string().min(5).max(255).required().email(),

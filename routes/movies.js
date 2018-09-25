@@ -8,6 +8,7 @@ const {
     Genres
 } = require('../models/genre');
 const auth=require('../middleware/auth');
+const admin=require('../middleware/admin');
 
 router.get('/', async (req, res) => {
     const movies = await Movie.find().sort('title');
@@ -46,7 +47,7 @@ router.post('/',auth , async (req, res) => {
     res.send(movie);
 });
 
-router.delete('/:id', auth ,async (req, res) => {
+router.delete('/:id', [auth,admin] ,async (req, res) => {
     const movie = await Movie.findByIdAndRemove(req.params.id);
     if (!movie) return res.status(404).send(`The Movie with id: ${req.params.id} can't be found`);
 

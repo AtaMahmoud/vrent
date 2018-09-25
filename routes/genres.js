@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {Genres,validate}=require('../models/genre');
 const auth=require('../middleware/auth');
+const admin=require('../middleware/admin');
 
 router.get('/', async (req, res) => {
     const genres = await Genres.find().sort('name');
@@ -47,7 +48,7 @@ router.put('/:id', auth ,async (req, res) => {
     res.send(genre);
 });
 
-router.delete('/:id', auth ,async (req, res) => {
+router.delete('/:id', [auth,admin] ,async (req, res) => {
     const genre = await Genres.findOneAndRemove(req.params.id);
     if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
 
