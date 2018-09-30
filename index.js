@@ -11,6 +11,7 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const config=require('config');
 const winston=require('winston');
+require('winston-mongodb');
 Joi.objectId=require('joi-objectid')(Joi);
 
 
@@ -32,7 +33,9 @@ app.use(authEndPoint,auth);
 
 app.use(error);
 
-winston.add(winston.transports.File,{filename:'logfile.log'});
+//winston.add(new winston.transports.File,{filename:'logfile.log'});
+//winston.add(winston.transports.MongoDB,{db:'mongodb://localhost/vrent'});
+
 if(!config.get('jwtPrivateKey')){
     console.log('FATAL ERORR: jwtPrivateKey not defiend');
     process.exit(1);
