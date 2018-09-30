@@ -6,6 +6,7 @@ const movies = require('./routes/movies');
 const rentals=require('./routes/rentals');
 const users=require('./routes/users');
 const auth=require('./routes/auth');
+const error=require('./middleware/error');
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const config=require('config')
@@ -27,6 +28,8 @@ app.use(moviesEndPoint, movies);
 app.use(rentalsEndPoint,rentals);
 app.use(userEndPoint,users);
 app.use(authEndPoint,auth);
+
+app.use(error);
 
 if(!config.get('jwtPrivateKey')){
     console.log('FATAL ERORR: jwtPrivateKey not defiend');

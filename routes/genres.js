@@ -4,9 +4,14 @@ const {Genres,validate}=require('../models/genre');
 const auth=require('../middleware/auth');
 const admin=require('../middleware/admin');
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res,next) => {
+   try {
     const genres = await Genres.find().sort('name');
     res.send(genres);
+   } catch (ex) {
+       //todo : log the exception
+       next(ex);
+   }
 });
 
 router.get('/:id', async (req, res) => {
