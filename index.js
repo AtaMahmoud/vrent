@@ -9,7 +9,8 @@ const auth=require('./routes/auth');
 const error=require('./middleware/error');
 const mongoose = require('mongoose');
 const Joi = require('joi');
-const config=require('config')
+const config=require('config');
+const winston=require('winston');
 Joi.objectId=require('joi-objectid')(Joi);
 
 
@@ -31,6 +32,7 @@ app.use(authEndPoint,auth);
 
 app.use(error);
 
+winston.add(winston.transports.File,{filename:'logfile.log'});
 if(!config.get('jwtPrivateKey')){
     console.log('FATAL ERORR: jwtPrivateKey not defiend');
     process.exit(1);
