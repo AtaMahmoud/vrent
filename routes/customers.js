@@ -4,21 +4,23 @@ const {
     Customer,
     validate
 } = require('../models/customer');
-const auth=require('../middleware/auth');
-const admin=require('../middleware/admin');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
+const asyncMiddleware = require('../middleware/async');
 
-router.get('/', async (req, res) => {
+router.get('/', asyncMiddleware(async (req, res) => {
     const customer = await Customer.find().sort('name');
     res.send(customer);
-});
-router.get('/:id', async (req, res) => {
+}));
+
+router.get('/:id', asyncMiddleware(async (req, res) => {
     const customer = await Customer.findById(req.params.id);
     if (!customer) return res.status(404).send(`the customer with id: ${req.parms.id} can't be found`);
 
     res.send(customer);
-});
+}));
 
-router.post('/', auth ,async (req, res) => {
+router.post('/', auth, asyncMiddleware(async (req, res) => {
 
     const {
         error
@@ -34,9 +36,9 @@ router.post('/', auth ,async (req, res) => {
     await customer.save();
     res.send(customer);
 
-});
+}));
 
-router.put('/:id',auth , async (req, res) => {
+router.put('/:id', auth, asyncMiddleware(async (req, res) => {
     const {
         error
     } = validate(req.body);
@@ -52,14 +54,14 @@ router.put('/:id',auth , async (req, res) => {
 
     if (!customer) return res.status(404).send(`the customer with id: ${req.params.id} can't be found`);
     res.send(customer);
-});
+}));
 
-router.delete('/:id', [auth,admin] ,async (req, res) => {
+router.delete('/:id', [auth, admin], asyncMiddleware(async (req, res) => {
     const customer = await Customer.findByIdAndRemove(req.params.id);
     if (!customer) return res.status(404).send(`the customer with id: ${req.body.id} can't be found`);
 
     res.send(customer);
-});
+}));
 
 
 module.exports = router;

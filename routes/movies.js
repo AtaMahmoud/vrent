@@ -9,20 +9,21 @@ const {
 } = require('../models/genre');
 const auth=require('../middleware/auth');
 const admin=require('../middleware/admin');
+const asyncMiddleware = require('../middleware/async');
 
-router.get('/', async (req, res) => {
+router.get('/', asyncMiddleware(async (req, res) => {
     const movies = await Movie.find().sort('title');
     res.send(movies);
-});
+}));
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', asyncMiddleware(async (req, res) => {
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).send(`The Movie with id: ${req.params.id} can't be found`);
 
     res.send(movie);
-});
+}));
 
-router.post('/',auth , async (req, res) => {
+router.post('/',auth , asyncMiddleware(async (req, res) => {
     const {
         error
     } = validate(req.body);
@@ -45,16 +46,16 @@ router.post('/',auth , async (req, res) => {
     await movie.save();
 
     res.send(movie);
-});
+}));
 
-router.delete('/:id', [auth,admin] ,async (req, res) => {
+router.delete('/:id', [auth,admin] ,asyncMiddleware(async (req, res) => {
     const movie = await Movie.findByIdAndRemove(req.params.id);
     if (!movie) return res.status(404).send(`The Movie with id: ${req.params.id} can't be found`);
 
     res.send(movie);
-});
+}));
 
-router.put('/:id',auth , async (req, res) => {
+router.put('/:id',auth , asyncMiddleware(async (req, res) => {
     const {
         error
     } = validate(req.body);
@@ -79,6 +80,6 @@ router.put('/:id',auth , async (req, res) => {
 
     res.send(movie);
 
-});
+}));
 
 module.exports = router;

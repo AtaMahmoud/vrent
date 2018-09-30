@@ -3,25 +3,21 @@ const router = express.Router();
 const {Genres,validate}=require('../models/genre');
 const auth=require('../middleware/auth');
 const admin=require('../middleware/admin');
+const asyncMiddleware=require('../middleware/async');
 
-router.get('/', async (req, res,next) => {
-   try {
+router.get('/', asyncMiddleware(async (req, res) => {
     const genres = await Genres.find().sort('name');
     res.send(genres);
-   } catch (ex) {
-       //todo : log the exception
-       next(ex);
-   }
-});
+}));
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', asyncMiddleware(async (req, res) => {
     const genre = await Genres.findById(req.params.id);
     if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
 
     res.send(genre);
-});
+}));
 
-router.post('/',auth ,async (req, res) => {
+router.post('/',auth ,asyncMiddleware(async (req, res) => {
     const {
         error
     } = validate(req.body);
@@ -32,9 +28,9 @@ router.post('/',auth ,async (req, res) => {
     });
      await genre.save();
     res.send(genre);
-});
+}));
 
-router.put('/:id', auth ,async (req, res) => {
+router.put('/:id', auth ,asyncMiddleware(async (req, res) => {
     const {
         error
     } = validate(req.body);
@@ -51,14 +47,14 @@ router.put('/:id', auth ,async (req, res) => {
     if (!genre) return res.status(404).send(`the genre with id: ${req.params.id} can't be found`);
 
     res.send(genre);
-});
+}));
 
-router.delete('/:id', [auth,admin] ,async (req, res) => {
+router.delete('/:id', [auth,admin] ,asyncMiddleware(async (req, res) => {
     const genre = await Genres.findOneAndRemove(req.params.id);
     if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
 
     res.send(genre);
-});
+}));
 
 
 module.exports = router;
