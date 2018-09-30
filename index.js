@@ -33,6 +33,10 @@ app.use(authEndPoint,auth);
 
 app.use(error);
 
+process.on('uncaughtException',(ex)=>{
+    console.log('WE GOT UNCAUGHT EXCEPTION');
+    winston.error(ex.message,ex);
+});
 //winston.add(new winston.transports.File,{filename:'logfile.log'});
 //winston.add(winston.transports.MongoDB,{db:'mongodb://localhost/vrent'});
 
