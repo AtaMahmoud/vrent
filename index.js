@@ -34,11 +34,15 @@ app.use(authEndPoint,auth);
 app.use(error);
 
 process.on('uncaughtException',(ex)=>{
-    console.log('WE GOT UNCAUGHT EXCEPTION');
     winston.error(ex.message,ex);
+    process.exit(1);
 });
 //winston.add(new winston.transports.File,{filename:'logfile.log'});
 //winston.add(winston.transports.MongoDB,{db:'mongodb://localhost/vrent'});
+process.on('unhandledRejection',(ex)=>{
+    winston.error(ex.message,ex);
+    process.exit(1);
+});
 
 if(!config.get('jwtPrivateKey')){
     console.log('FATAL ERORR: jwtPrivateKey not defiend');
