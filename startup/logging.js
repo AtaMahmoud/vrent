@@ -1,17 +1,17 @@
-const winston=require('winston');
+const winston = require('winston');
 require('winston-mongodb');
 
-module.exports=function() {
-    process.on('uncaughtException',(ex)=>{
-        winston.error("Winstone"+ex.message,ex);
-        process.exit(1);
+module.exports = function () {
+    winston.handleExceptions(new winston.transports.Console({
+        colorize: true,
+        prettyPrint:true
+    }),
+    new winston.transports.File({filename:'uncaughtExceptions.log'}));
+
+    process.on('unhandledRejection', (ex) => {
+        throw ex;
     });
-    
-    process.on('unhandledRejection',(ex)=>{
-        winston.error(ex.message,ex);
-        process.exit(1);
-    });
-    
+
     const options = {
         fileInfo: {
             level: 'error',
@@ -31,7 +31,7 @@ module.exports=function() {
             capped: true,
         },
     };
-    
-    winston.add(winston.transports.File,options.fileInfo);
-    winston.add(winston.transports.MongoDB,options.mongoDB);    
+
+    winston.add(winston.transports.File, options.fileInfo);
+    winston.add(winston.transports.MongoDB, options.mongoDB);
 }
