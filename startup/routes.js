@@ -5,6 +5,7 @@ const rentalsEndPoint = '/api/rentals';
 const userEndPoint = '/api/users';
 const authEndPoint = '/api/auth';
 
+const express = require('express');
 const genres = require('../routes/genres');
 const customers = require('../routes/customers');
 const movies = require('../routes/movies');
@@ -14,6 +15,7 @@ const auth = require('../routes/auth');
 const error = require('../middleware/error');
 
 module.exports = function (app) {
+    app.use(express.json());
     app.use(genresEndPoint, genres);
     app.use(customerEndPoint, customers);
     app.use(moviesEndPoint, movies);
