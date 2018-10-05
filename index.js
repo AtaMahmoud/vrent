@@ -34,11 +34,34 @@ app.use(authEndPoint,auth);
 app.use(error);
 
 process.on('uncaughtException',(ex)=>{
-    winston.error(ex.message,ex);
+    winston.error("Winstone"+ex.message,ex);
     process.exit(1);
 });
-//winston.add(new winston.transports.File,{filename:'logfile.log'});
-//winston.add(winston.transports.MongoDB,{db:'mongodb://localhost/vrent'});
+
+
+const options = {
+    fileInfo: {
+        level: 'error',
+        filename: 'logfile.log',
+        handleExceptions: true,
+        json: true,
+        maxsize: 5242880, // 5MB
+        maxFiles: 5,
+        colorize: false,
+        timestamp: true,
+    },
+    mongoDB: {
+        db: 'mongodb://localhost/vrent',
+        collection: 'log',
+        level: 'info',
+        storeHost: true,
+        capped: true,
+    },
+};
+
+winston.add(winston.transports.File,options.fileInfo);
+winston.add(winston.transports.MongoDB,options.mongoDB);
+
 process.on('unhandledRejection',(ex)=>{
     winston.error(ex.message,ex);
     process.exit(1);
