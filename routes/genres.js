@@ -4,6 +4,7 @@ const {Genres,validate}=require('../models/genre');
 const auth=require('../middleware/auth');
 const admin=require('../middleware/admin');
 const asyncMiddleware=require('../middleware/async');
+const mongoose=require('mongoose');
 
 router.get('/', asyncMiddleware(async (req, res) => {
     const genres = await Genres.find().sort('name');
@@ -11,6 +12,9 @@ router.get('/', asyncMiddleware(async (req, res) => {
 }));
 
 router.get('/:id', asyncMiddleware(async (req, res) => {
+    if(!mongoose.Types.ObjectId.isValid(req.params.id))
+        return res.status(404).send('Invalid ID.');
+        
     const genre = await Genres.findById(req.params.id);
     if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
 
