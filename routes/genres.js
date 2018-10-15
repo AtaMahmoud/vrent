@@ -5,7 +5,7 @@ const auth=require('../middleware/auth');
 const admin=require('../middleware/admin');
 const asyncMiddleware=require('../middleware/async');
 const validObjectId=require('../middleware/validateObjectId');
-const mongoose=require('mongoose');
+
 
 router.get('/', asyncMiddleware(async (req, res) => {
     const genres = await Genres.find().sort('name');
