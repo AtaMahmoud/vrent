@@ -53,8 +53,8 @@ router.put('/:id', auth ,asyncMiddleware(async (req, res) => {
     res.send(genre);
 }));
 
-router.delete('/:id', [auth,admin] ,asyncMiddleware(async (req, res) => {
-    const genre = await Genres.findOneAndRemove(req.params.id);
+router.delete('/:id', [auth,admin,validObjectId] ,asyncMiddleware(async (req, res) => {
+    const genre = await Genres.findByIdAndRemove(req.params.id);
     if (!genre) return res.status(404).send(`the genre with id: ${req.body.id} can't be found`);
 
     res.send(genre);
