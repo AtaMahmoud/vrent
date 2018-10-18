@@ -34,7 +34,7 @@ router.post('/',auth ,asyncMiddleware(async (req, res) => {
     res.send(genre);
 }));
 
-router.put('/:id', auth ,asyncMiddleware(async (req, res) => {
+router.put('/:id', [auth,validObjectId] ,asyncMiddleware(async (req, res) => {
     const {
         error
     } = validate(req.body);
