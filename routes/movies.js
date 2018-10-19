@@ -10,6 +10,7 @@ const {
 const auth=require('../middleware/auth');
 const admin=require('../middleware/admin');
 const asyncMiddleware = require('../middleware/async');
+const validate=require('../middleware/validate');
 
 router.get('/', asyncMiddleware(async (req, res) => {
     const movies = await Movie.find().sort('title');
@@ -23,12 +24,8 @@ router.get('/:id', asyncMiddleware(async (req, res) => {
     res.send(movie);
 }));
 
-router.post('/',auth , asyncMiddleware(async (req, res) => {
-    const {
-        error
-    } = validate(req.body);
-    if (error) res.status(400).send(error.details[0].message);
-
+router.post('/',[auth,validate(validate)] , asyncMiddleware(async (req, res) => {
+   
     const genre = await Genres.findById(req.body.genreId);
     if (!genre) res.status(400).send('Invalide genre');
 
@@ -55,12 +52,8 @@ router.delete('/:id', [auth,admin] ,asyncMiddleware(async (req, res) => {
     res.send(movie);
 }));
 
-router.put('/:id',auth , asyncMiddleware(async (req, res) => {
-    const {
-        error
-    } = validate(req.body);
-    if (error) res.status(400).send(error.details[0].message);
-
+router.put('/:id',[auth,validate(validate)] , asyncMiddleware(async (req, res) => {
+  
     const genre = await Genres.findById(req.body.genreId);
     if (!genre) res.status(400).send('Invalide genre');
 

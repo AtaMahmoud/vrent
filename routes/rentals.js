@@ -14,6 +14,7 @@ const Fawn = require('fawn');
 const mongoose = require('mongoose');
 const auth=require('../middleware/auth');
 const asyncMiddleware = require('../middleware/async');
+const validate=require('../middleware/validate');
 
 Fawn.init(mongoose);
 
@@ -22,12 +23,8 @@ router.get('/', asyncMiddleware(async (req, res) => {
     res.send(rental);
 }));
 
-router.post('/', auth ,asyncMiddleware(async (req, res) => {
-    const {
-        error
-    } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+router.post('/', [auth,validate(validate)] ,asyncMiddleware(async (req, res) => {
+  
     const customer = await Customer.findById(req.body.customerId);
     if (!customer) return res.status(400).send('Invalid Cutomer');
 
