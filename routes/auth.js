@@ -6,8 +6,8 @@ const {
 const bcrypt = require('bcrypt');
 const Joi=require('joi');
 const asyncMiddleware=require('../middleware/async');
-const validate=require('../middleware/validate');
-router.post('/', validate(validate),asyncMiddleware(async (req, res) => {
+const validateRequest=require('../middleware/validate');
+router.post('/', validateRequest(validate),asyncMiddleware(async (req, res) => {
     let user = await User.findOne({
         email: req.body.email
     });

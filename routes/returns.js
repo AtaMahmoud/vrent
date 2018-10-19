@@ -9,10 +9,7 @@ const {Movie}=require('../models/movie');
 const validate=require('../middleware/validate');
 
 router.post('/',[auth,validate(validateReturn)],asyncMiddleware(async(req,res)=>{
-    const rental=await Rental.findOne({
-        'customer._id':req.body.customerId,
-        'movie._id':req.body.movieId
-    });
+    const rental=await Rental.lookUp(req.body.customerId,req.body.movieId);
 
     if(!rental) return res.status(404).send('rental not found!');
     if(rental.dateReturn) return res.status(400).send('Return already processed');

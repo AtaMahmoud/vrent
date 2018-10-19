@@ -5,7 +5,7 @@ const auth=require('../middleware/auth');
 const admin=require('../middleware/admin');
 const asyncMiddleware=require('../middleware/async');
 const validObjectId=require('../middleware/validateObjectId');
-const validate=require('../middleware/validate');
+const validateRequest=require('../middleware/validate');
 
 router.get('/', asyncMiddleware(async (req, res) => {
     const genres = await Genres.find().sort('name');
@@ -19,7 +19,7 @@ router.get('/:id',validObjectId, asyncMiddleware(async (req, res) => {
     res.send(genre);
 }));
 
-router.post('/',[auth,validate(validate)] ,asyncMiddleware(async (req, res) => {
+router.post('/',[auth,validateRequest(validate)] ,asyncMiddleware(async (req, res) => {
   
 
     const genre = new Genres({
@@ -29,7 +29,7 @@ router.post('/',[auth,validate(validate)] ,asyncMiddleware(async (req, res) => {
     res.send(genre);
 }));
 
-router.put('/:id', [auth,validObjectId,validate] ,asyncMiddleware(async (req, res) => {
+router.put('/:id', [auth,validObjectId,validateRequest(validate)] ,asyncMiddleware(async (req, res) => {
     const genre = await Genres.findByIdAndUpdate(req.params.id, {
         $set: {
             name: req.body.name

@@ -7,7 +7,7 @@ const {
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const asyncMiddleware = require('../middleware/async');
-const validate=require('../middleware/validate');
+const validateRequest=require('../middleware/validate');
 
 router.get('/', asyncMiddleware(async (req, res) => {
     const customer = await Customer.find().sort('name');
@@ -21,7 +21,7 @@ router.get('/:id', asyncMiddleware(async (req, res) => {
     res.send(customer);
 }));
 
-router.post('/', auth, validate(validate),asyncMiddleware(async (req, res) => {
+router.post('/', [auth, validateRequest(validate)],asyncMiddleware(async (req, res) => {
     const customer = new Customer({
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,
@@ -33,7 +33,7 @@ router.post('/', auth, validate(validate),asyncMiddleware(async (req, res) => {
 
 }));
 
-router.put('/:id', auth, validate(validate),asyncMiddleware(async (req, res) => {
+router.put('/:id', [auth, validateRequest(validate)],asyncMiddleware(async (req, res) => {
     const customer = await Customer.findByIdAndUpdate(req.params.id, {
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,

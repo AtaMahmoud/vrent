@@ -8,13 +8,13 @@ const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const auth = require('../middleware/auth');
 const asyncMiddleware = require('../middleware/async');
-const validate=require('../middleware/validate');
+const validateRequest=require('../middleware/validate');
 router.get('/me', auth, asyncMiddleware(async (req, res) => {
     const user = await User.findById(req.user._id).select('-password');
     res.send(user);
 }));
 
-router.post('/',validate(validate), asyncMiddleware(async (req, res) => {
+router.post('/',validateRequest(validate), asyncMiddleware(async (req, res) => {
     let user = await User.findOne({
         email: req.body.email
     });
