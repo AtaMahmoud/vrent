@@ -1,3 +1,4 @@
 {
-    "jwtPrivateKey": "vrent_jwtPrivateKey"
+    "jwtPrivateKey": "vrent_jwtPrivateKey",
+    "db":"vrent_db"
 }
