@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const winston=require('winston');
 
+require('./startup/prod')(app);
 require('./startup/logging')();
 require('./startup/routes')(app);
 require('./startup/db')();
